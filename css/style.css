@@ -1,0 +1,8 @@
+form {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+fieldset {
+    display: flex;
+    justify-content: space-around;
+}
