@@ -6,3 +6,6 @@ fieldset {
     display: flex;
     justify-content: space-around;
 }
+input {
+    text-align: center;
+}
