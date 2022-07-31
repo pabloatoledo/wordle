@@ -9,3 +9,16 @@ fieldset {
 input {
     text-align: center;
 }
+
+.bg-yellow {
+    background-color: yellow;
+}
+.bg-green {
+    background-color: green;
+}
+.bg-gray {
+    background-color: gray;
+}
+.bg-white {
+    background-color: white;
+}

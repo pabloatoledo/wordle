@@ -1,25 +1,58 @@
 window.onload = function() {
 
-    
+    //variables 
 
-    var matriz = [
-        [0, 2, 4, 6, 8],
-        [1, 3, 5, 7, 9],
-        [0, 1, 2, 3, 4],
-        [8, 5, 3, 6, 9],
-        [0, 9, 4, 8, 7],
-        [4, 8, 0, 1, 8]
+    var palabra = "pablo"
+    var rowActual = 0
+    var enviar = document.getElementById("enviar")
+    var letras = [
+        ["", "", "", "", ""],
+        ["", "", "", "", ""],
+        ["", "", "", "", ""],
+        ["", "", "", "", ""],
+        ["", "", "", "", ""],
+        ["", "", "", "", ""]
     ]
 
+    //eventos
 
-    for (let iFila = 0; iFila < matriz.length; iFila++) {
-        const element = matriz[iFila];
-        for (let iCol = 0; iCol < 5; iCol++) {
-            const element = matriz[iCol];
-            var casilla = "r"+iFila+"c"+iCol
-            var casillero = document.getElementById(casilla)
-            //console.log("casilla: ", casilla, "nro:" ,matriz[iFila][iCol])
-            casillero.value = matriz[iFila][iCol]
+    enviar.addEventListener("click", validaPalabra)
+
+    //funciones
+
+    // function inicio () {
+    //     for (let iFila = 0; iFila < letras.length; iFila++) {
+    //         for (let iCol = 0; iCol < letras[iFila].length; iCol++) {
+    //             var id = "r"+iFila+"c"+iCol
+    //             var input = document.getElementById(id)
+    //             input.oninput = function() {
+    //                 letras[iFila][iCol] = this.value
+    //                 console.log(letras)
+    //             }
+    //         }
+    //     }
+    // }
+
+    function validaPalabra () {
+        if(validaRenglonCompleto()) {
+            console.log("ok")
+        } else {
+            console.log("no ok")
         }
     }
+
+    function validaRenglonCompleto () {
+        var filaCompleta = true
+        for (let iiFila = 0; iiFila < 5; iiFila++) {
+            var celda = "r"+rowActual+"c"+iiFila
+            var iCelda = document.getElementById(celda)
+            if (iCelda.value != "") {
+                filaCompleta = filaCompleta * true
+            } else {
+                filaCompleta = filaCompleta * false
+            }
+        }
+        return filaCompleta
+    }
+
 }
