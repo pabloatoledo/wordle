@@ -46,11 +46,11 @@ window.onload = function() {
                 colActual++
             }
         }
-        if(event.keyCode == 13) {
+        if(event.keyCode == 13) {       //tecla enter
             validaPalabra()
             
         }
-        if(event.keyCode == 8) {
+        if(event.keyCode == 8) {        //tecla borrar
             if(colActual > 0) {
                 colActual--
             }
@@ -89,20 +89,32 @@ window.onload = function() {
         return filaCompleta
     }
 
-    function obtenerPalabra() {         //si el renglón esta completo, procesa la palabra con las validaciones
-        for (let idCelda = 0; idCelda < 5; idCelda++) {
-            var celda = "r" + filaActual + "c" + idCelda
-            var iCelda = document.getElementById(celda)
-            if(palabra.charAt(idCelda) == iCelda.value) {    //compara las letras de la palabra con el valor de celda
+    function obtenerPalabra() {         //si el renglón esta completo, procesa la palabra con las validaciones y obtiene la palabra
+        var newPalabra = palabra
+        //revisa los verdes
+        for (let colCelda = 0; colCelda < 5; colCelda++) {
+            var iCelda = recCeldas(colCelda)
+            if(palabra.charAt(colCelda) == iCelda.value) {    //compara las letras de la palabra con el valor de celda
                 iCelda.classList.add("bg-green")
-            } else {
-                if(palabra.match(iCelda.value)) {
-                    iCelda.classList.add("bg-yellow")
-                } else {
+                newPalabra = newPalabra.replace(iCelda.value, "*")
+            } 
+        }
+        //revisa los amarillos - grises
+        for (let colCelda = 0; colCelda < 5; colCelda++) {
+            var iCelda = recCeldas(colCelda)
+            if(newPalabra.match(iCelda.value)) {
+                iCelda.classList.add("bg-yellow")
+                newPalabra = newPalabra.replace(iCelda.value, "*")
+            }
+            else if(palabra.charAt(colCelda) != iCelda.value) {
                     iCelda.classList.add("bg-gray")
-                }
             }
         }
     }
 
+    function recCeldas (idCel) {
+        var celda = "r" + filaActual + "c" + idCel
+        var iCelda = document.getElementById(celda)
+        return iCelda
+    }
 }
