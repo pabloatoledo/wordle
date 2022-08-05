@@ -1,26 +1,48 @@
 form {
-    max-width: 1000px;
+    max-width: 368px;
+    max-height: 440px;
     margin: 0 auto;
 }
 fieldset {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    margin-top: 0;
+    padding-block-start: 0;
+    padding-block-end: 0;
+}
+input {
+    height: 48px;
+    width: 48px;
+    margin: 4px 4px;
+    padding: 0;
+}
+
+/* ----- Estilos -----*/
+h1 {
+    text-align: center;
+    color: #6969B3;
+}
+body {
+    background-color: #F0F0F7;
+}
+fieldset {
+    border: none;
 }
 input {
     text-align: center;
-    font-weight: 700;
-    font-size: 15px;
-    color: orange;
+    font-weight: 500;
+    font-size: 20px;
+    color: #3D3B3D;
+    border-radius: 10px;
+    border: 1px solid;
+    border-color: #8F898D;
 }
 .bg-yellow {
-    background-color: yellow;
+    background-color: #FAFD0F;
 }
 .bg-green {
-    background-color: green;
+    background-color: #B2E92E;
 }
 .bg-gray {
-    background-color: gray;
-}
-.bg-white {
-    background-color: white;
+    background-color: #B8B1B6;
 }

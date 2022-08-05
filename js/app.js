@@ -5,7 +5,7 @@ window.onload = function() {
     var palabra = "RAJAR"
     var filaActual = 0
     var colActual = 0
-    var enviar = document.getElementById("enviar")
+    var palCorrecta = false
     var letras = [
         ["", "", "", "", ""],
         ["", "", "", "", ""],
@@ -21,7 +21,6 @@ window.onload = function() {
 
     //eventos
 
-    enviar.addEventListener("click", validaPalabra)
     document.addEventListener("keydown", focus)
     
     //funciones
@@ -91,24 +90,31 @@ window.onload = function() {
 
     function obtenerPalabra() {         //si el renglón esta completo, procesa la palabra con las validaciones y obtiene la palabra
         var newPalabra = palabra
+        palCorrecta = true
         //revisa los verdes
         for (let colCelda = 0; colCelda < 5; colCelda++) {
             var iCelda = recCeldas(colCelda)
             if(palabra.charAt(colCelda) == iCelda.value) {    //compara las letras de la palabra con el valor de celda
                 iCelda.classList.add("bg-green")
                 newPalabra = newPalabra.replace(iCelda.value, "*")
-            } 
+                palCorrecta = palCorrecta * true
+            } else {
+                palCorrecta = palCorrecta * false
+            }
         }
         //revisa los amarillos - grises
         for (let colCelda = 0; colCelda < 5; colCelda++) {
             var iCelda = recCeldas(colCelda)
-            if(newPalabra.match(iCelda.value)) {
+            if(newPalabra.match(iCelda.value) && palabra.charAt(colCelda) != iCelda.value) {
                 iCelda.classList.add("bg-yellow")
                 newPalabra = newPalabra.replace(iCelda.value, "*")
             }
             else if(palabra.charAt(colCelda) != iCelda.value) {
-                    iCelda.classList.add("bg-gray")
+                iCelda.classList.add("bg-gray")
             }
+        }
+        if (palCorrecta) {
+            alert("GANO EL JUEGO!!!")
         }
     }
 
