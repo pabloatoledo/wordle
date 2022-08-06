@@ -4,6 +4,7 @@ window.onload = function() {
 
     var btnLetra = document.getElementsByClassName("letra")
     var numBtns = btnLetra.length
+    var letTeclado = "QWERTYUIOPASDFGHJKLÑZXCVBNM"
     var enter = document.getElementById("enviar")
     var borrar = document.getElementById("borrar")
     var palabra = "RAJAR"
@@ -33,10 +34,6 @@ window.onload = function() {
     document.addEventListener("keydown", focus)
 
     //funciones
-
-    function focustemp() {
-        console.log(this.value)
-    }
 
     function desCampos() {          //deshabilita todos los campos para que el usuario no los pueda usar
         for (let iFila = 0; iFila < letras.length; iFila++) {
@@ -81,11 +78,11 @@ window.onload = function() {
             if(filaActual < 5) {
                 filaActual++
             } else {
-                console.log("JUEGO FINALIZADO!")
+                alert("Finalizó el juego!!")
             }
             colActual = 0
         } else {
-            console.log("DEBE COMPLETAR EL RENGLÓN!")
+            alert("La palabra no esta completa")
         }
     }
 
@@ -102,7 +99,6 @@ window.onload = function() {
         var filaCompleta = true
         for (let colCelda = 0; colCelda < 5; colCelda++) {
             var celda = recCeldas(colCelda)
-            
             if (celda.value != "") {
                 filaCompleta = filaCompleta * true
             } else {
@@ -122,6 +118,7 @@ window.onload = function() {
                 celda.classList.add("bg-green")
                 newPalabra = newPalabra.replace(celda.value, "*")
                 palCorrecta = palCorrecta * true
+                pintaTeclado(celda, "bg-green")
             } else {
                 palCorrecta = palCorrecta * false
             }
@@ -132,9 +129,11 @@ window.onload = function() {
             if(newPalabra.match(celda.value) && palabra.charAt(colCelda) != celda.value) {
                 celda.classList.add("bg-yellow")
                 newPalabra = newPalabra.replace(celda.value, "*")
+                pintaTeclado(celda, "bg-yellow")
             }
             else if(palabra.charAt(colCelda) != celda.value) {
                 celda.classList.add("bg-gray")
+                pintaTeclado(celda, "bg-gray")
             }
         }
         if (palCorrecta) {
@@ -142,9 +141,18 @@ window.onload = function() {
         }
     }
 
-    function recCeldas (idCel) {
+    function recCeldas (idCel) {                // recorre las celdas y devuelve el valor rXcX
         var celda = "r" + filaActual + "c" + idCel
         var iCelda = document.getElementById(celda)
         return iCelda
+    }
+
+    function pintaTeclado (celda, color) {
+        if (letTeclado.match(celda.value)) {
+            letTeclado.replace(celda.value, "*")
+            var idBtnLet = "let" + celda.value
+            var btnLet = document.getElementById(idBtnLet)
+            btnLet.classList.add(color)
+        }
     }
 }
