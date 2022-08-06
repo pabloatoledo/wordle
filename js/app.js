@@ -2,6 +2,10 @@ window.onload = function() {
 
     //variables 
 
+    var btnLetra = document.getElementsByClassName("letra")
+    var numBtns = btnLetra.length
+    var enter = document.getElementById("enviar")
+    var borrar = document.getElementById("borrar")
     var palabra = "RAJAR"
     var filaActual = 0
     var colActual = 0
@@ -21,9 +25,18 @@ window.onload = function() {
 
     //eventos
 
+    for (var i = 0; i < numBtns; i++) {
+        btnLetra[i].addEventListener('click', focus);  
+    }
+    enter.addEventListener("click",validaPalabra)
+    borrar.addEventListener("click",borraLetra)
     document.addEventListener("keydown", focus)
-    
+
     //funciones
+
+    function focustemp() {
+        console.log(this.value)
+    }
 
     function desCampos() {          //deshabilita todos los campos para que el usuario no los pueda usar
         for (let iFila = 0; iFila < letras.length; iFila++) {
@@ -36,9 +49,9 @@ window.onload = function() {
     }
 
     function focus() {              //detecta que sea una letra lo ingresado y en función de eso corre el focus o renglon
+        console.log(this.value)
         if(colActual < 5 && event.keyCode > 64 && event.keyCode < 91 || event.keyCode == 192) {
-            var celdaActual = "r" + filaActual + "c" + colActual
-            var celda = document.getElementById(celdaActual)
+            var celda = recCeldas(colActual)
             celda.value = event.key.toUpperCase()
             letras[filaActual][colActual] = event.key
             if(colActual < 5) {
@@ -50,12 +63,15 @@ window.onload = function() {
             
         }
         if(event.keyCode == 8) {        //tecla borrar
-            if(colActual > 0) {
-                colActual--
+            borraLetra()
+        }
+        if(colActual < 5 && this.value != null) {        //ingresa valores desde el teclado
+            var celda = recCeldas(colActual)
+            celda.value = this.value
+            letras[filaActual][colActual] = this.value
+            if(colActual < 5) {
+                colActual++
             }
-            var celdaActual = "r" + filaActual + "c" + colActual
-            var celda = document.getElementById(celdaActual)
-            celda.value = ""
         }
     }
 
@@ -73,13 +89,21 @@ window.onload = function() {
         }
     }
 
+    function borraLetra () {
+        if(colActual > 0) {
+            colActual--
+        }
+        var celdaActual = "r" + filaActual + "c" + colActual
+        var celda = document.getElementById(celdaActual)
+        celda.value = ""
+    }
+
     function validaRenglonCompleto() {      //valida que el renglón este completo
         var filaCompleta = true
-        for (let iiFila = 0; iiFila < 5; iiFila++) {
-            var celda = "r"+filaActual+"c"+iiFila
-            var iCelda = document.getElementById(celda)
+        for (let colCelda = 0; colCelda < 5; colCelda++) {
+            var celda = recCeldas(colCelda)
             
-            if (iCelda.value != "") {
+            if (celda.value != "") {
                 filaCompleta = filaCompleta * true
             } else {
                 filaCompleta = filaCompleta * false
@@ -93,10 +117,10 @@ window.onload = function() {
         palCorrecta = true
         //revisa los verdes
         for (let colCelda = 0; colCelda < 5; colCelda++) {
-            var iCelda = recCeldas(colCelda)
-            if(palabra.charAt(colCelda) == iCelda.value) {    //compara las letras de la palabra con el valor de celda
-                iCelda.classList.add("bg-green")
-                newPalabra = newPalabra.replace(iCelda.value, "*")
+            var celda = recCeldas(colCelda)
+            if(palabra.charAt(colCelda) == celda.value) {    //compara las letras de la palabra con el valor de celda
+                celda.classList.add("bg-green")
+                newPalabra = newPalabra.replace(celda.value, "*")
                 palCorrecta = palCorrecta * true
             } else {
                 palCorrecta = palCorrecta * false
@@ -104,13 +128,13 @@ window.onload = function() {
         }
         //revisa los amarillos - grises
         for (let colCelda = 0; colCelda < 5; colCelda++) {
-            var iCelda = recCeldas(colCelda)
-            if(newPalabra.match(iCelda.value) && palabra.charAt(colCelda) != iCelda.value) {
-                iCelda.classList.add("bg-yellow")
-                newPalabra = newPalabra.replace(iCelda.value, "*")
+            var celda = recCeldas(colCelda)
+            if(newPalabra.match(celda.value) && palabra.charAt(colCelda) != celda.value) {
+                celda.classList.add("bg-yellow")
+                newPalabra = newPalabra.replace(celda.value, "*")
             }
-            else if(palabra.charAt(colCelda) != iCelda.value) {
-                iCelda.classList.add("bg-gray")
+            else if(palabra.charAt(colCelda) != celda.value) {
+                celda.classList.add("bg-gray")
             }
         }
         if (palCorrecta) {

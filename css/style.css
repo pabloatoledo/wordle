@@ -16,8 +16,23 @@ input {
     margin: 4px 4px;
     padding: 0;
 }
+.teclado {
+    max-width: 500px;
+    display: flex;
+    flex-flow: column;
+    margin: 10% auto;
+}
+.rowTec {
+    display: flex;
+}
+button {
+    width: 100%;
+    height: 40px;
+    margin: 2px;
+}
 
 /* ----- Estilos -----*/
+
 h1 {
     text-align: center;
     color: #6969B3;
@@ -37,6 +52,24 @@ input {
     border: 1px solid;
     border-color: #8F898D;
 }
+button {
+    border: 1px solid #8F898D;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+button:hover {
+    background-color: #3D3B3D;
+    color: white;
+}
+#enviar:hover {
+    background-color: #44BBA4;
+}
+#borrar:hover {
+    background-color: red;
+}
+
 .bg-yellow {
     background-color: #FAFD0F;
 }
