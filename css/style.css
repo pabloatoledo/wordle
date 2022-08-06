@@ -25,11 +25,22 @@ button {
     height: 40px;
     margin: 2px;
 }
+.menuJuego {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+}
+.menuJuego .center {
+    margin: 7px auto;
+    width: 75%;
+}
 .teclado {
     max-width: 500px;
     display: flex;
     flex-flow: column;
-    margin: 10% auto;
+    margin: 25px auto;
 }
 .rowTec {
     display: flex;
@@ -62,10 +73,14 @@ button {
     font-size: 15px;
     font-weight: 500;
 }
-
 button:hover {
     background-color: #3D3B3D;
     color: white;
+}
+#jugar {
+    background-color: #44BBA4;
+    color: white;
+    font-size: 20px;
 }
 #enviar:hover {
     background-color: #44BBA4;

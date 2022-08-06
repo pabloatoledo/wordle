@@ -9,6 +9,7 @@
     background-color: rgba(0,0,0,0.4);
 } 
 .modal-content {
+    border-radius: 10px;
     background-color: red;
     margin: 15% auto;
     padding: 20px;
