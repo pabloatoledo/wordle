@@ -6,10 +6,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Wordle - Un juego de palabras diario</title>
         <script src="./js/app.js"></script>
+        <link rel="stylesheet" href="./css/normalize.css">
+        <link rel="stylesheet" href="./css/modal.css">
         <link rel="stylesheet" href="./css/style.css">
     </head>
     <body>
-        <h1>Wordle</h1>
+        <header>
+            <div class="menuJuego">
+                <span>Colocá tu nombre para comenzar a jugar</span>
+                <input type="text" id="nombre">
+                <button id="jugar">Jugar</button>
+            </div>
+            <h1>Wordle</h1>
+        </header>
         <form>
             <fieldset>
                 <input type="text" id="r0c0">
@@ -89,6 +98,24 @@
                 <button class="letra" id="letN" value="N">N</button>
                 <button class="letra" id="letM" value="M">M</button>
                 <button id="borrar">&#9003;</button>
+            </div>
+        </div>
+        <div id="modalFaltaNombre" class="modal oculto">
+            <div class="modal-content">
+                <span class="close closeNombre">&times;</span>
+                <p class="center">Debe colocar su nombre</p>
+            </div>
+        </div>
+        <div id="modalGano" class="modal oculto">
+            <div class="modal-content gano">
+                <span class="close closeGano">&times;</span>
+                <p class="center">Felicitaciones, ganaste el juego!!</p>
+            </div>
+        </div>
+        <div id="modalPerdio" class="modal oculto">
+            <div class="modal-content">
+                <span class="close closePerdio">&times;</span>
+                <p class="center">Perdiste boludo!</p>
             </div>
         </div>
     </body>
