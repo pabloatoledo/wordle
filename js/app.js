@@ -9,11 +9,16 @@ window.onload = function() {
     var borrar = document.getElementById("borrar")
     var empJuego = document.getElementById("jugar")
     var nombre = document.getElementById("nombre")
+    var crono = document.getElementById("cronometro")
     var palabra = "RAJAR"                       //palabra a encontrar en el tablero
     var filaActual = 0                          //determina la fila actual (principalmente en el focus)
     var colActual = 0                           //determina la columna actual (principalmente en el focus)
     var palCorrecta = false                     //determina si la palabra en el renglon es la correcta
     var jugar = false                           //determina si el juego finalizo o no
+    var seg = 0
+    var min = 0
+    var hora = 0
+    var tiempo = "00:00:00"
     var letras = [
         ["", "", "", "", ""],
         ["", "", "", "", ""],
@@ -52,6 +57,7 @@ window.onload = function() {
     function startJuego () {
         if (nombre.value != "") {
             jugar = true
+            cronometro()
         } else {
             console.log("falta poner el nombre boludo")
             opModFalNom()
@@ -177,6 +183,40 @@ window.onload = function() {
         opModPerdio()
     }
 
+    function cronometro () {
+        let mensaje = new Promise((resolve, reject)=>{
+            setTimeout(function () {
+                resolve("ok")
+                if (jugar) {
+                    if (seg < 60) {
+                        seg++
+                    } else {
+                        seg = 0
+                        if (min < 60) {
+                            min++
+                        } else {
+                            min = 0
+                            hora++
+                        }
+                    }
+                    if (seg.toString().length < 2) {
+                        seg = "0" + seg
+                    }
+                    if (min.toString().length < 2) {
+                        min = "0" + min
+                    }
+                    tiempo = hora + ":" + min + ":" + seg
+                    crono.textContent = tiempo
+                }
+            }, 1000);
+        })
+        mensaje.then(m =>{
+            cronometro()
+            
+        }).catch(function () {
+            console.log('error');
+        })
+    }
     // ---------- modales ---------- //
 
     //DOM
