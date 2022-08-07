@@ -7,6 +7,7 @@ window.onload = function() {
     var letTeclado = "QWERTYUIOPASDFGHJKLÑZXCVBNM"              //para validar letras usadas y pintar el teclado
     var enter = document.getElementById("enviar")
     var borrar = document.getElementById("borrar")
+    var colNom = document.getElementById("colNom")
     var empJuego = document.getElementById("jugar")
     var nombre = document.getElementById("nombre")
     var crono = document.getElementById("cronometro")
@@ -19,6 +20,7 @@ window.onload = function() {
     var min = 0
     var hora = 0
     var tiempo = "00:00:00"
+    var linkPalabras = "https://wordle.danielfrg.com/words/5.json"
     var letras = [
         ["", "", "", "", ""],
         ["", "", "", "", ""],
@@ -31,6 +33,7 @@ window.onload = function() {
     //inicio
 
     desCampos()
+    buscaPalabra()
 
     //eventos
 
@@ -54,14 +57,34 @@ window.onload = function() {
         }
     }
 
-    function startJuego () {
-        if (nombre.value != "") {
+    function buscaPalabra() {
+        var sinAcento = /[ÁÉÍÓÚ]/
+        fetch (linkPalabras)
+        .then(function(respuesta) {
+            return respuesta.json()
+        })
+        .then (function(pal){
+            var random = parseInt(Math.random() * pal.length)
+            palabra = pal[random].toUpperCase()
+            console.log(palabra)
+            if (sinAcento.test(palabra)) {
+                buscaPalabra()
+            }
+        })
+    }
+    
+
+    function startJuego () {        //acciones que realiza cuando comienza el juego
+        if (nombre.value != "" && jugar == false) {
             jugar = true
             cronometro()
+            colNom.classList.add("oculto")
+            nombre.classList.add("oculto")
+            crono.classList.remove("oculto")
+            empJuego.classList.add("oculto")
         } else {
-            console.log("falta poner el nombre boludo")
             opModFalNom()
-        }
+        }        
     }
 
     function focus() {              //detecta que sea una letra lo ingresado y en función de eso corre el focus o renglon
@@ -73,10 +96,10 @@ window.onload = function() {
                 colActual++
             }
         }
-        if(event.keyCode == 13) {       //tecla enter
+        if(jugar == true && event.keyCode == 13) {       //tecla enter
             validaPalabra()
         }
-        if(event.keyCode == 8) {        //tecla borrar
+        if(jugar == true && event.keyCode == 8) {        //tecla borrar
             borraLetra()
         }
         if(jugar == true && colActual < 5 && this.value != null) {        //ingresa valores desde el teclado
@@ -123,7 +146,7 @@ window.onload = function() {
         return filaCompleta
     }
 
-    function obtenerPalabra() {                 //procesa la palabra con las validaciones y obtiene la palabra
+    function obtenerPalabra() {                 //procesa la palabra con las validaciones, obtiene la palabra y la pinta
         var newPalabra = palabra
         palCorrecta = true
         //revisa los verdes
@@ -168,7 +191,7 @@ window.onload = function() {
 
     function pintaTeclado (celda, color) {      //pinta el teclado con los colores que determine la funcion obtenerPalabra
         if (letTeclado.match(celda.value)) {
-            letTeclado.replace(celda.value, "*")
+            letTeclado = letTeclado.replace(celda.value, "*")
             var idBtnLet = "let" + celda.value
             var btnLet = document.getElementById(idBtnLet)
             btnLet.classList.add(color)
@@ -183,7 +206,7 @@ window.onload = function() {
         opModPerdio()
     }
 
-    function cronometro () {
+    function cronometro () {                    //administra el cronometro
         let mensaje = new Promise((resolve, reject)=>{
             setTimeout(function () {
                 resolve("ok")
@@ -217,6 +240,7 @@ window.onload = function() {
             console.log('error');
         })
     }
+
     // ---------- modales ---------- //
 
     //DOM
