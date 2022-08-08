@@ -20,3 +20,9 @@ p {
 .error {
     color: red;
 }
+.rad-red {
+    border-color: red;
+}
+.rad-black {
+    border-color: black;
+}

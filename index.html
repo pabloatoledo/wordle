@@ -16,7 +16,10 @@
                 <p class="center" id="colNom">Colocá tu nombre para comenzar a jugar</p>
                 <input class="center" type="text" id="nombre">
                 <button class="center" id="jugar">Jugar nueva partida</button>
-                <button class="center" id="partGuard">Ver partidas guardadas</button>
+                <div class="btnPartAnt">
+                    <button class="btnPart" id="partGuard">Partidas guardadas</button>
+                    <button class="btnPart" id="partGanadas">Partidas ganadas</button>
+                </div>
                 <button class="oculto center" id="guardaPart">GUARDAR PARTIDA</button>
                 <h3 class="center oculto" id="cronometro">0:00:00</h3>
             </div>
@@ -120,10 +123,11 @@
                 <span class="close closePerdio">&times;</span>
                 <p class="center-text">Lamentablemente perdiste el juego :(</p>
                 <p class="center-text">Suerte para la próxima vez</p>
+                <p class="center-text" id="palEsco"></p>
             </div>
         </div>
         <div id="modalPartGuard" class="modal oculto">
-            <div class="modal-content">
+            <div class="modal-content partGuar">
                 <span class="close closePartGuard">&times;</span>
                 <table class="center-text">
                     <thead>
@@ -141,6 +145,11 @@
                 </table>
             </div>
         </div>
+        <aside>
+            <div class="mensAlerta renglonInc center-text oculto" id="rengInco">
+                <p>Debes completar el renglón</p>
+            </div>
+        </aside>
         <footer>
             <button id="btnReiniciar">Reiniciar</button>
             <button id="btnContactanos">Contactanos</button>

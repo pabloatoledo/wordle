@@ -22,27 +22,27 @@ window.onload = function () {
 
     function showErrNom () {
         errNom.classList.remove("oculto")
-        nombre.style.borderColor = "red"
+        nombre.classList.add("rad-red")
     }
     function remErrNom () {
         errNom.classList.add("oculto")
-        nombre.style.borderColor = "black"
+        nombre.classList.add("rad-black")
     }
     function showErrMail () {
         errMail.classList.remove("oculto")
-        email.style.borderColor = "red"
+        email.classList.add("rad-red")
     }
     function remErrMail () {
         errMail.classList.add("oculto")
-        email.style.borderColor = "black"
+        email.classList.add("rad-black")
     }
     function showErrCom () {
         errCom.classList.remove("oculto")
-        comentarios.style.borderColor = "red"
+        comentarios.classList.add("rad-red")
     }
     function remErrCom () {
         errCom.classList.add("oculto")
-        comentarios.style.borderColor = "black"
+        comentarios.classList.add ("rad-black")
     }
 
     //valida campos

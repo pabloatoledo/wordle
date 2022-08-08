@@ -7,15 +7,17 @@ window.onload = function() {
     var letTeclado = "QWERTYUIOPASDFGHJKLÑZXCVBNM"              //para validar letras usadas y pintar el teclado
     var enter = document.getElementById("enviar")
     var borrar = document.getElementById("borrar")
-    var colNom = document.getElementById("colNom")
-    var empJuego = document.getElementById("jugar")
-    var nombre = document.getElementById("nombre")
-    var partGuard = document.getElementById("partGuard")
-    var guardPart = document.getElementById("guardaPart")
-    var crono = document.getElementById("cronometro")
-    var btnContacto = document.getElementById("btnContactanos")
-    var btnCodigo = document.getElementById("btnCodigo")
-    var btnReiniciar = document.getElementById("btnReiniciar")
+    var colNom = document.getElementById("colNom")   
+    var empJuego = document.getElementById("jugar")                 //boton para comenzar a jugar
+    var nombre = document.getElementById("nombre")                  //campo con el nombre
+    var partGuard = document.getElementById("partGuard")            //abre las partidas guardadas
+    var guardPart = document.getElementById("guardaPart")           //boton para guardar la partida
+    var crono = document.getElementById("cronometro")               //cronometro en pantalla
+    var btnContacto = document.getElementById("btnContactanos")     //abre formulario de contacto
+    var btnCodigo = document.getElementById("btnCodigo")            //abre el codigo en github
+    var btnReiniciar = document.getElementById("btnReiniciar")      //boton reiniciar
+    var alertaRenInc = document.getElementById("rengInco")          //mensaje de error con renglon incompleto
+    var palEsco = document.getElementById("palEsco")                //para agregar la palabra que no pudo encontrar
     var partidasGuardadas = [""]                  //levanta las partidas que se encuentren en localstorage
     var palabra = "RAJAR"                       //palabra a encontrar en el tablero (queda esta en caso de no poder leer el json)
     var nombreJugador = ""
@@ -158,7 +160,10 @@ window.onload = function() {
             }
             colActual = 0
         } else if (!importaDatos) {
-            alert("La palabra no esta completa")
+            alertaRenInc.classList.remove("oculto")
+            setTimeout(function() {
+                alertaRenInc.classList.add("oculto")
+            }, 2000)
         }
             
     }
@@ -242,6 +247,7 @@ window.onload = function() {
     }
 
     function pierdeJuego () {                   //se dispara cuando se pierde el juego
+        palEsco.innerText = "La palabra escondida era: " + palabra
         opModPerdio()
     }
 
