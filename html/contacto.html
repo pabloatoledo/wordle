@@ -15,25 +15,18 @@
             <h1>Wordle</h1>
         </header>
         <main>
-            <form>
-                <p>Complete el formulario para registrarse</p>
-                <div class="form-dat">
-                    <div class="item-dat">
-                        <label for="nombre">Nombre: </label>
-                        <input type="text" id="nombre" placeholder="Tu nombre">
-                        <p class="error oculto" id="errNom">Debe contener solo texto y al menos 3 letras</p>
-                        <div class="item-dat">
-                            <label for="email">Email: </label>
-                            <input type="text" id="email" placeholder="Tu correo electrónico">
-                            <p class="error oculto" id="errMail">Ingrese un mail correcto</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="comen">
-                    <p>Comentarios:</p>
-                    <textarea name="comentarios" id="comentarios" placeholder="Tus comentarios"></textarea>
-                </div>
-                <input type="button" value="Enviar" id="enviar">
+            <form action="">
+                <h2 class="titulo">Complete el formulario para registrarse</h2>
+                <label for="nombre">Nombre: </label>
+                <input type="text" id="nombre" placeholder="Tu nombre">
+                <p class="error oculto" id="errNom">Debe contener al menos 3 caracteres</p>
+                <label for="email">Email: </label>
+                <input type="text" id="email" placeholder="Tu correo electrónico">
+                <p class="error oculto" id="errMail">Ingrese un mail correcto</p>
+                <p>Comentarios:</p>
+                <textarea name="mensaje" id="mensaje" placeholder="Tu mensaje"></textarea>
+                <p class="error oculto" id="errCom">Debe ingresar al menos 5 caracteres</p>
+                <input type="button" value="Enviar" id="btnEnviar">
             </form>
         </main>
         <footer>

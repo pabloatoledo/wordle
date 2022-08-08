@@ -333,7 +333,7 @@ window.onload = function() {
         }
     }
 
-    function cargaPartidaTablero () {
+    function cargaPartidaTablero () {           //carga los datos en el tablero y la matriz de letras
         var registro = partidasGuardadas[this.value - 1]
         var letrasPartida = registro[5]
         id = registro[0]
@@ -360,12 +360,16 @@ window.onload = function() {
         importaDatos = false
     }
 
-    function abreCodigo () {
+    function abreCodigo () {                    //abre la pagina de github con el codigo
         window.open("https://github.com/pabloatoledo/wordle", "_blank")
     }
 
-    function abreContacto () {
-        window.open("./html/contacto.html")
+    function abreContacto () {                  //abre la pagina con el contacto
+        document.location.href = "./html/contacto.html"
+    }
+
+    function recargaPagina () {                 //recarga la pagina
+        location.reload()
     }
 
     // ---------- modales ---------- //
