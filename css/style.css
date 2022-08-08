@@ -25,6 +25,15 @@ button {
     height: 40px;
     margin: 2px;
 }
+table {
+    margin: 0 auto;
+}
+tr {
+    height: 20px;
+}
+th {
+    width: 15%;
+}
 .menuJuego {
     display: flex;
     flex-direction: column;
@@ -66,6 +75,10 @@ input {
     border-radius: 10px;
     border: 1px solid;
     border-color: #8F898D;
+}
+tr, td, th {
+    border: 1px solid;
+    border-radius: 5px;
 }
 button {
     border: 1px solid #8F898D;

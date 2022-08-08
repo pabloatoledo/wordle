@@ -37,6 +37,9 @@
 .oculto {
     display: none;
 }
+.center-text {
+    text-align: center;
+}
 #textoModal {
     color: #cccccc;
 }

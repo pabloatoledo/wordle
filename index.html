@@ -106,25 +106,26 @@
         <div id="modalFaltaNombre" class="modal oculto">
             <div class="modal-content">
                 <span class="close closeNombre">&times;</span>
-                <p class="center">Debe colocar su nombre</p>
+                <p class="center-text">Debe colocar su nombre</p>
             </div>
         </div>
         <div id="modalGano" class="modal oculto">
             <div class="modal-content gano">
                 <span class="close closeGano">&times;</span>
-                <p class="center">Felicitaciones, ganaste el juego!!</p>
+                <p class="center-text">Felicitaciones, ganaste el juego!!</p>
             </div>
         </div>
         <div id="modalPerdio" class="modal oculto">
             <div class="modal-content">
                 <span class="close closePerdio">&times;</span>
-                <p class="center">Perdiste boludo!</p>
+                <p class="center-text">Lamentablemente perdiste el juego :(</p>
+                <p class="center-text">Suerte para la próxima vez</p>
             </div>
         </div>
         <div id="modalPartGuard" class="modal oculto">
             <div class="modal-content">
                 <span class="close closePartGuard">&times;</span>
-                <table  style="border: 1px solid;">
+                <table class="center-text">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -135,15 +136,7 @@
                             <th>Seleccionar</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>07/08/22</td>
-                            <td>18:30</td>
-                            <td>Pablo</td>
-                            <td>01:02:03</td>
-                            <td><button>Cargar</button></td>
-                        </tr>
+                    <tbody id="tblPartGuardadas">
                     </tbody>
                 </table>
             </div>

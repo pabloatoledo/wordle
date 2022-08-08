@@ -13,7 +13,7 @@ window.onload = function() {
     var partGuard = document.getElementById("partGuard")
     var guardPart = document.getElementById("guardaPart")
     var crono = document.getElementById("cronometro")
-    var partidasGuardadas = []                  //levanta las partidas que se encuentren en localstorage
+    var partidasGuardadas = [""]                  //levanta las partidas que se encuentren en localstorage
     var palabra = "RAJAR"                       //palabra a encontrar en el tablero (queda esta en caso de no poder leer el json)
     var nombreJugador = ""
     var filaActual = 0                          //determina la fila actual (principalmente en el focus)
@@ -23,7 +23,7 @@ window.onload = function() {
     var seg = 0                                 //variables de cronometro
     var min = 0
     var hs = 0
-    var id = 4                                  //id partida
+    var id = 0                                  //id partida
     var linkPalabras = "https://wordle.danielfrg.com/words/5.json"
     var letras = [
         ["", "", "", "", ""],
@@ -46,7 +46,7 @@ window.onload = function() {
     enter.addEventListener("click",validaPalabra)
     borrar.addEventListener("click",borraLetra)
     document.addEventListener("keydown",focus)
-    partGuard.addEventListener("click",opModPartGuard)
+    partGuard.addEventListener("click",cargaPartida)
     guardPart.addEventListener("click",guardaPartida)
     for (var i = 0; i < numBtns; i++) {
         btnLetra[i].addEventListener('click', focus);  
@@ -92,23 +92,14 @@ window.onload = function() {
         })
     }
 
-    function leePartidas () {                                           //levanta partidas guardadas en localstorage
+    function leePartidas () {       //levanta partidas guardadas en localstorage
         partidasGuardadas = JSON.parse(localStorage.getItem("PartidasGuardadas"))
         if (partidasGuardadas != null) {
-            var idMayor = 0
-            var partida
-            for (x = 0; x < partidasGuardadas.length; x++) {
-                partida = partidasGuardadas[x]
-                if (partida[0] > idMayor) {                             //detecta cual es el id mayor que hay, y le suma 1
-                    idMayor = partida[0]
-                }
-            }
-            id = idMayor + 1
-            
+            id = partidasGuardadas.length + 1
         } else {
-            partidasGuardadas = []                                      //si no hay partidas guardadas, asigna como id 1
             id = 1
-        }
+            partidasGuardadas = []
+        }            
     }
 
     function startJuego () {        //acciones que realiza cuando comienza el juego
@@ -131,7 +122,6 @@ window.onload = function() {
         if(jugar == true && colActual < 5 && event.keyCode > 64 && event.keyCode < 91 || event.keyCode == 192) {
             var celda = recCeldas(colActual)
             celda.value = event.key.toUpperCase()
-            letras[filaActual][colActual] = event.key
             if(colActual < 5) {
                 colActual++
             }
@@ -142,10 +132,9 @@ window.onload = function() {
         if(jugar == true && event.keyCode == 8) {        //tecla borrar
             borraLetra()
         }
-        if(jugar == true && colActual < 5 && this.value != null) {        //ingresa valores desde el teclado
+        if(jugar == true && colActual < 5 && this.value != null) {        //ingresa valores desde el teclado en pantalla
             var celda = recCeldas(colActual)
             celda.value = this.value
-            letras[filaActual][colActual] = this.value
             if(colActual < 5) {
                 colActual++
             }
@@ -182,6 +171,7 @@ window.onload = function() {
             } else {
                 filaCompleta = filaCompleta * false
             }
+            letras[filaActual][colActual] = celda.value
         }
         return filaCompleta
     }
@@ -284,11 +274,74 @@ window.onload = function() {
 
     function guardaPartida () {                 //guarda la partida en curso
         var datosPartidaAct = []
+        console.log(partidasGuardadas)
         var fecha = new Date().toLocaleDateString()
         var hora = new Date().toLocaleTimeString();
+        var existe = false
         datosPartidaAct = [id, nombreJugador, fecha, hora, palabra, letras, hs, min, seg]
-        partidasGuardadas.push(datosPartidaAct)
+        for(var x = 0; x < partidasGuardadas.length; x++) {                         //guarda en un array los datos de la partida
+            var partida = partidasGuardadas[x]
+            if (partida[0] == id) {
+                partidasGuardadas[x] = datosPartidaAct
+                existe = true
+            }
+        }
+        if (!existe) {
+            partidasGuardadas.push(datosPartidaAct)                                //verifica si no existe alguna partida anterior con el index
+        }        
+        console.log(partidasGuardadas)
         localStorage.setItem("PartidasGuardadas", JSON.stringify(partidasGuardadas))
+    }
+
+    function cargaPartida () {                  //muestra las partidas guardadas en el modal
+        opModPartGuard()
+        if (partidasGuardadas.length > 0) {
+            partidasGuardadas.forEach(dato => {
+                var trNew = document.createElement("tr")
+                var btnNuevo = document.createElement("button")
+                var td1 = document.createElement("td")
+                var td2 = document.createElement("td")
+                var td3 = document.createElement("td")
+                var td4 = document.createElement("td")
+                var td5 = document.createElement("td")
+                btnNuevo.type = "button"
+                btnNuevo.innerText = "Seleccionar"
+                btnNuevo.className = "btnPartida"
+                btnNuevo.value = dato[0]
+                td1.innerText = dato[0]
+                td2.innerText = dato[2]
+                td3.innerText = dato[3]
+                td4.innerText = dato[1]
+                td5.innerText = dato[6] + ":" + dato[7] + ":" + dato[8]
+                trNew.appendChild(td1)
+                trNew.appendChild(td2)
+                trNew.appendChild(td3)
+                trNew.appendChild(td4)
+                trNew.appendChild(td5)
+                trNew.appendChild(btnNuevo)
+                document.getElementById("tblPartGuardadas").appendChild(trNew)
+                btnNuevo.addEventListener("click",cargaPartidaTablero)
+            })
+        }
+    }
+
+    function cargaPartidaTablero () {
+        var registro = partidasGuardadas[this.value - 1]
+        var letrasPartida = registro[5]
+        palabra = registro[4]
+        console.log(palabra)
+        jugar = true
+        modalPartGuard.classList.remove("block")
+        modalPartGuard.classList.add("oculto")
+        filaActual = 0
+        for (let iiFila = 0; iiFila < 6; iiFila++) {
+            for (let iiCol = 0; iiCol < 5; iiCol++) {
+                var celda = recCeldas(iiCol)
+                celda.value = letrasPartida[iiFila][iiCol].toLocaleUpperCase()
+            }
+            obtenerPalabra()
+            filaActual++
+        }
     }
 
     // ---------- modales ---------- //
