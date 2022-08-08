@@ -2,15 +2,16 @@ window.onload = function() {
 
     //variables 
 
-    var btnLetra = document.getElementsByClassName("letra")     //busca los botones del teclado
+    var btnLetra = document.getElementsByClassName("letra")         //busca los botones del teclado
     var numBtns = btnLetra.length
-    var letTeclado = "QWERTYUIOPASDFGHJKLÑZXCVBNM"              //para validar letras usadas y pintar el teclado
-    var enter = document.getElementById("enviar")
-    var borrar = document.getElementById("borrar")
-    var colNom = document.getElementById("colNom")   
+    var letTeclado = "QWERTYUIOPASDFGHJKLÑZXCVBNM"                  //para validar letras usadas y pintar el teclado
+    var enter = document.getElementById("enviar")                   //boton enviar del teclado
+    var borrar = document.getElementById("borrar")                  //boton borrar del teclado               
+    var colNom = document.getElementById("colNom")                  //texto que indica colocar el nombre 
     var empJuego = document.getElementById("jugar")                 //boton para comenzar a jugar
     var nombre = document.getElementById("nombre")                  //campo con el nombre
     var partGuard = document.getElementById("partGuard")            //abre las partidas guardadas
+    var partGanadas = document.getElementById("partGanadas")        //abre partidas ganadas
     var guardPart = document.getElementById("guardaPart")           //boton para guardar la partida
     var crono = document.getElementById("cronometro")               //cronometro en pantalla
     var btnContacto = document.getElementById("btnContactanos")     //abre formulario de contacto
@@ -18,9 +19,9 @@ window.onload = function() {
     var btnReiniciar = document.getElementById("btnReiniciar")      //boton reiniciar
     var alertaRenInc = document.getElementById("rengInco")          //mensaje de error con renglon incompleto
     var palEsco = document.getElementById("palEsco")                //para agregar la palabra que no pudo encontrar
-    var partidasGuardadas = [""]                  //levanta las partidas que se encuentren en localstorage
+    var partidasGuardadas = [""]                //levanta las partidas que se encuentren en localstorage
     var palabra = "RAJAR"                       //palabra a encontrar en el tablero (queda esta en caso de no poder leer el json)
-    var nombreJugador = ""
+    var nombreJugador = ""                      //nombre del jugador
     var filaActual = 0                          //determina la fila actual (principalmente en el focus)
     var colActual = 0                           //determina la columna actual (principalmente en el focus)
     var palCorrecta = false                     //determina si la palabra en el renglon es la correcta
@@ -29,6 +30,7 @@ window.onload = function() {
     var seg = 0                                 //variables de cronometro
     var min = 0
     var hs = 0
+    var tiempo = "00:00:00"                     //tiempo transcurrido en el juego
     var id = 0                                  //id partida
     var linkPalabras = "https://wordle.danielfrg.com/words/5.json"
     var letras = [
@@ -48,7 +50,7 @@ window.onload = function() {
 
     //eventos
 
-    empJuego.addEventListener("click", startJuego)
+    empJuego.addEventListener("click", empiezaJuego)
     enter.addEventListener("click",validaPalabra)
     borrar.addEventListener("click",borraLetra)
     document.addEventListener("keydown",focus)
@@ -111,7 +113,7 @@ window.onload = function() {
         }            
     }
 
-    function startJuego () {        //acciones que realiza cuando comienza el juego
+    function empiezaJuego () {        //acciones que realiza cuando comienza el juego
         if ((nombre.value != "" && jugar == false) || importaDatos) {
             jugar = true
             colNom.classList.add("oculto")
@@ -120,6 +122,7 @@ window.onload = function() {
             guardPart.classList.remove("oculto")
             empJuego.classList.add("oculto")
             partGuard.classList.add("oculto")
+            partGanadas.classList.add("oculto")
             nombreJugador = nombre.value
             cronometro()
         } else {
@@ -244,6 +247,26 @@ window.onload = function() {
 
     function ganaJuego () {                     //se dispara cuando se gana el juego
         opModGano()
+        guardaPartGan()
+    }
+
+    function guardaPartGan () {                  //si la partida es ganadora, guarda en localstorage la info
+        var partidaGanada = []                   //almacena esta partida
+        var partidasGanadas = []                 //almacena todas las partidas
+        var fechaAct = new Date().toLocaleDateString()
+        var puntaje = 1000 - ((filaActual * 100) + 100) - (hs * 100) - (min * 10) - (seg * 1)
+        partidaGanada = [{
+            nombre: nombreJugador,
+            fecha: fechaAct,
+            tiem: tiempo,
+            filas: filaActual + 1,
+            punt: puntaje,
+        }]
+        if (localStorage.getItem("PartidasGanadas") != null) {
+            partidasGanadas = JSON.parse(localStorage.getItem("PartidasGanadas"))
+        }
+        partidasGanadas.push(partidaGanada)
+        localStorage.setItem("PartidasGanadas", JSON.stringify(partidasGanadas))
     }
 
     function pierdeJuego () {                   //se dispara cuando se pierde el juego
@@ -252,7 +275,6 @@ window.onload = function() {
     }
 
     function cronometro () {                    //administra el cronometro
-        var tiempo = "00:00:00"
         let mensaje = new Promise((resolve, reject)=>{
             setTimeout(function () {
                 resolve("ok")
@@ -302,8 +324,7 @@ window.onload = function() {
         }
         if (!existe) {
             partidasGuardadas.push(datosPartidaAct)                                //verifica si no existe alguna partida anterior con el index
-        }        
-        console.log(partidasGuardadas)
+        }
         localStorage.setItem("PartidasGuardadas", JSON.stringify(partidasGuardadas))
     }
 
@@ -361,7 +382,7 @@ window.onload = function() {
             }
             validaPalabra()
         }
-        startJuego()
+        empiezaJuego()
         nombreJugador = registro[1]
         importaDatos = false
     }
