@@ -10,16 +10,20 @@ window.onload = function() {
     var colNom = document.getElementById("colNom")
     var empJuego = document.getElementById("jugar")
     var nombre = document.getElementById("nombre")
+    var partGuard = document.getElementById("partGuard")
+    var guardPart = document.getElementById("guardaPart")
     var crono = document.getElementById("cronometro")
-    var palabra = "RAJAR"                       //palabra a encontrar en el tablero
+    var partidasGuardadas = []                  //levanta las partidas que se encuentren en localstorage
+    var palabra = "RAJAR"                       //palabra a encontrar en el tablero (queda esta en caso de no poder leer el json)
+    var nombreJugador = ""
     var filaActual = 0                          //determina la fila actual (principalmente en el focus)
     var colActual = 0                           //determina la columna actual (principalmente en el focus)
     var palCorrecta = false                     //determina si la palabra en el renglon es la correcta
     var jugar = false                           //determina si el juego finalizo o no
-    var seg = 0
+    var seg = 0                                 //variables de cronometro
     var min = 0
-    var hora = 0
-    var tiempo = "00:00:00"
+    var hs = 0
+    var id = 4                                  //id partida
     var linkPalabras = "https://wordle.danielfrg.com/words/5.json"
     var letras = [
         ["", "", "", "", ""],
@@ -34,13 +38,16 @@ window.onload = function() {
 
     desCampos()
     buscaPalabra()
+    leePartidas()
 
     //eventos
 
     empJuego.addEventListener("click", startJuego)
     enter.addEventListener("click",validaPalabra)
     borrar.addEventListener("click",borraLetra)
-    document.addEventListener("keydown", focus)
+    document.addEventListener("keydown",focus)
+    partGuard.addEventListener("click",opModPartGuard)
+    guardPart.addEventListener("click",guardaPartida)
     for (var i = 0; i < numBtns; i++) {
         btnLetra[i].addEventListener('click', focus);  
     }
@@ -57,8 +64,9 @@ window.onload = function() {
         }
     }
 
-    function buscaPalabra() {
+    function buscaPalabra() {       //elige la palabra aleatoria para resolver
         var sinAcento = /[ÁÉÍÓÚ]/
+        var palAnteriores = []
         fetch (linkPalabras)
         .then(function(respuesta) {
             return respuesta.json()
@@ -69,19 +77,51 @@ window.onload = function() {
             console.log(palabra)
             if (sinAcento.test(palabra)) {
                 buscaPalabra()
+            } else {
+                if (localStorage.getItem("Palabra") != null) {           //se fija si hay alguna palabra guardada, repetida y carga en array
+                    palAnteriores = JSON.parse(localStorage.getItem("Palabra"))
+                    for (var i = 0; i < palAnteriores.length; i ++) {
+                        if (palAnteriores[i] == palabra) {
+                            buscaPalabra()
+                        }
+                    }
+                }
+                palAnteriores.push(palabra)
+                localStorage.setItem("Palabra", JSON.stringify(palAnteriores))
             }
         })
     }
-    
+
+    function leePartidas () {                                           //levanta partidas guardadas en localstorage
+        partidasGuardadas = JSON.parse(localStorage.getItem("PartidasGuardadas"))
+        if (partidasGuardadas != null) {
+            var idMayor = 0
+            var partida
+            for (x = 0; x < partidasGuardadas.length; x++) {
+                partida = partidasGuardadas[x]
+                if (partida[0] > idMayor) {                             //detecta cual es el id mayor que hay, y le suma 1
+                    idMayor = partida[0]
+                }
+            }
+            id = idMayor + 1
+            
+        } else {
+            partidasGuardadas = []                                      //si no hay partidas guardadas, asigna como id 1
+            id = 1
+        }
+    }
 
     function startJuego () {        //acciones que realiza cuando comienza el juego
         if (nombre.value != "" && jugar == false) {
             jugar = true
-            cronometro()
             colNom.classList.add("oculto")
             nombre.classList.add("oculto")
             crono.classList.remove("oculto")
+            guardPart.classList.remove("oculto")
             empJuego.classList.add("oculto")
+            partGuard.classList.add("oculto")
+            nombreJugador = nombre.value
+            cronometro()
         } else {
             opModFalNom()
         }        
@@ -207,6 +247,7 @@ window.onload = function() {
     }
 
     function cronometro () {                    //administra el cronometro
+        var tiempo = "00:00:00"
         let mensaje = new Promise((resolve, reject)=>{
             setTimeout(function () {
                 resolve("ok")
@@ -219,7 +260,7 @@ window.onload = function() {
                             min++
                         } else {
                             min = 0
-                            hora++
+                            hs++
                         }
                     }
                     if (seg.toString().length < 2) {
@@ -228,7 +269,7 @@ window.onload = function() {
                     if (min.toString().length < 2) {
                         min = "0" + min
                     }
-                    tiempo = hora + ":" + min + ":" + seg
+                    tiempo = hs + ":" + min + ":" + seg
                     crono.textContent = tiempo
                 }
             }, 1000);
@@ -241,12 +282,23 @@ window.onload = function() {
         })
     }
 
+    function guardaPartida () {                 //guarda la partida en curso
+        var datosPartidaAct = []
+        var fecha = new Date().toLocaleDateString()
+        var hora = new Date().toLocaleTimeString();
+        datosPartidaAct = [id, nombreJugador, fecha, hora, palabra, letras, hs, min, seg]
+        partidasGuardadas.push(datosPartidaAct)
+        localStorage.setItem("PartidasGuardadas", JSON.stringify(partidasGuardadas))
+    }
+
     // ---------- modales ---------- //
 
     //DOM
     var modalGano = document.getElementById("modalGano")
     var modalPerdio = document.getElementById("modalPerdio")
     var modalNombre = document.getElementById("modalFaltaNombre")
+    var modalPartGuard = document.getElementById("modalPartGuard")
+    var closePartGuard = document.getElementsByClassName("closePartGuard")[0]
     var closeNombre = document.getElementsByClassName("closeNombre")[0]
     var closeGano = document.getElementsByClassName("closeGano")[0]
     var closePerdio = document.getElementsByClassName("closePerdio")[0]
@@ -264,6 +316,10 @@ window.onload = function() {
         modalNombre.classList.remove("block")
         modalNombre.classList.add("oculto")
     }
+    closePartGuard.onclick = function() {
+        modalPartGuard.classList.remove("block")
+        modalPartGuard.classList.add("oculto")
+    }
     window.onclick = function(event) {
         if (event.target == modalGano) {
             modalGano.classList.remove("block")
@@ -276,6 +332,10 @@ window.onload = function() {
         if (event.target == modalNombre) {
             modalNombre.classList.remove("block")
             modalNombre.classList.add("oculto")
+        }
+        if (event.target == modalPartGuard) {
+            modalPartGuard.classList.remove("block")
+            modalPartGuard.classList.add("oculto")
         }
     }
 
@@ -292,5 +352,8 @@ window.onload = function() {
         modalNombre.classList.remove("oculto")
         modalNombre.classList.add("block")
     }
+    function opModPartGuard () {
+        modalPartGuard.classList.remove("oculto")
+        modalPartGuard.classList.add("block")
+    }
 }
-

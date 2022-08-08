@@ -15,7 +15,9 @@
             <div class="menuJuego">
                 <p class="center" id="colNom">Colocá tu nombre para comenzar a jugar</p>
                 <input class="center" type="text" id="nombre">
-                <button class="center" id="jugar">Jugar</button>
+                <button class="center" id="jugar">Jugar nueva partida</button>
+                <button class="center" id="partGuard">Ver partidas guardadas</button>
+                <button class="oculto center" id="guardaPart">GUARDAR PARTIDA</button>
                 <h3 class="center oculto" id="cronometro">0:00:00</h3>
             </div>
             <h1>Wordle</h1>
@@ -117,6 +119,33 @@
             <div class="modal-content">
                 <span class="close closePerdio">&times;</span>
                 <p class="center">Perdiste boludo!</p>
+            </div>
+        </div>
+        <div id="modalPartGuard" class="modal oculto">
+            <div class="modal-content">
+                <span class="close closePartGuard">&times;</span>
+                <table  style="border: 1px solid;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Nombre</th>
+                            <th>Tiempo</th>
+                            <th>Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>07/08/22</td>
+                            <td>18:30</td>
+                            <td>Pablo</td>
+                            <td>01:02:03</td>
+                            <td><button>Cargar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </body>
