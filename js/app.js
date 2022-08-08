@@ -13,6 +13,9 @@ window.onload = function() {
     var partGuard = document.getElementById("partGuard")
     var guardPart = document.getElementById("guardaPart")
     var crono = document.getElementById("cronometro")
+    var btnContacto = document.getElementById("btnContactanos")
+    var btnCodigo = document.getElementById("btnCodigo")
+    var btnReiniciar = document.getElementById("btnReiniciar")
     var partidasGuardadas = [""]                  //levanta las partidas que se encuentren en localstorage
     var palabra = "RAJAR"                       //palabra a encontrar en el tablero (queda esta en caso de no poder leer el json)
     var nombreJugador = ""
@@ -20,6 +23,7 @@ window.onload = function() {
     var colActual = 0                           //determina la columna actual (principalmente en el focus)
     var palCorrecta = false                     //determina si la palabra en el renglon es la correcta
     var jugar = false                           //determina si el juego finalizo o no
+    var importaDatos = false                    //determina si carga datos desde una partida guardada (se usa para validaciones)
     var seg = 0                                 //variables de cronometro
     var min = 0
     var hs = 0
@@ -48,6 +52,9 @@ window.onload = function() {
     document.addEventListener("keydown",focus)
     partGuard.addEventListener("click",cargaPartida)
     guardPart.addEventListener("click",guardaPartida)
+    btnCodigo.addEventListener("click",abreCodigo)
+    btnContacto.addEventListener("click",abreContacto)
+    btnReiniciar.addEventListener("click",recargaPagina)
     for (var i = 0; i < numBtns; i++) {
         btnLetra[i].addEventListener('click', focus);  
     }
@@ -103,7 +110,7 @@ window.onload = function() {
     }
 
     function startJuego () {        //acciones que realiza cuando comienza el juego
-        if (nombre.value != "" && jugar == false) {
+        if ((nombre.value != "" && jugar == false) || importaDatos) {
             jugar = true
             colNom.classList.add("oculto")
             nombre.classList.add("oculto")
@@ -122,6 +129,7 @@ window.onload = function() {
         if(jugar == true && colActual < 5 && event.keyCode > 64 && event.keyCode < 91 || event.keyCode == 192) {
             var celda = recCeldas(colActual)
             celda.value = event.key.toUpperCase()
+            letras[filaActual][colActual] = celda.value
             if(colActual < 5) {
                 colActual++
             }
@@ -135,6 +143,7 @@ window.onload = function() {
         if(jugar == true && colActual < 5 && this.value != null) {        //ingresa valores desde el teclado en pantalla
             var celda = recCeldas(colActual)
             celda.value = this.value
+            letras[filaActual][colActual] = celda.value
             if(colActual < 5) {
                 colActual++
             }
@@ -148,9 +157,10 @@ window.onload = function() {
                 filaActual++
             }
             colActual = 0
-        } else {
+        } else if (!importaDatos) {
             alert("La palabra no esta completa")
         }
+            
     }
 
     function borraLetra () {        //cuando el usuario presiona en la tecla borrar, borra la letra del tablero
@@ -171,7 +181,6 @@ window.onload = function() {
             } else {
                 filaCompleta = filaCompleta * false
             }
-            letras[filaActual][colActual] = celda.value
         }
         return filaCompleta
     }
@@ -199,7 +208,7 @@ window.onload = function() {
                 celda.classList.add("bg-yellow")
                 pintaTeclado(celda, "bg-yellow")
             }
-            else if(palabra.charAt(colCelda) != celda.value) {
+            else if(palabra.charAt(colCelda) != celda.value && celda.value != "") {
                 celda.classList.add("bg-gray")
                 pintaTeclado(celda, "bg-gray")
             }
@@ -274,7 +283,6 @@ window.onload = function() {
 
     function guardaPartida () {                 //guarda la partida en curso
         var datosPartidaAct = []
-        console.log(partidasGuardadas)
         var fecha = new Date().toLocaleDateString()
         var hora = new Date().toLocaleTimeString();
         var existe = false
@@ -328,9 +336,14 @@ window.onload = function() {
     function cargaPartidaTablero () {
         var registro = partidasGuardadas[this.value - 1]
         var letrasPartida = registro[5]
+        id = registro[0]
         palabra = registro[4]
+        hs = registro[6]
+        min = registro[7]
+        seg = registro[8]
         console.log(palabra)
         jugar = true
+        importaDatos = true
         modalPartGuard.classList.remove("block")
         modalPartGuard.classList.add("oculto")
         filaActual = 0
@@ -338,10 +351,21 @@ window.onload = function() {
             for (let iiCol = 0; iiCol < 5; iiCol++) {
                 var celda = recCeldas(iiCol)
                 celda.value = letrasPartida[iiFila][iiCol].toLocaleUpperCase()
+                letras[iiFila][iiCol] = letrasPartida[iiFila][iiCol]
             }
-            obtenerPalabra()
-            filaActual++
+            validaPalabra()
         }
+        startJuego()
+        nombreJugador = registro[1]
+        importaDatos = false
+    }
+
+    function abreCodigo () {
+        window.open("https://github.com/pabloatoledo/wordle", "_blank")
+    }
+
+    function abreContacto () {
+        window.open("./html/contacto.html")
     }
 
     // ---------- modales ---------- //

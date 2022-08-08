@@ -34,6 +34,12 @@ tr {
 th {
     width: 15%;
 }
+footer {
+    display: flex;
+    justify-content: space-between;
+    max-width: 75%;
+    margin: 10px auto;
+}
 .menuJuego {
     display: flex;
     flex-direction: column;
@@ -98,6 +104,10 @@ header button {
 header button:hover {
     background-color: #3D3B3D;
     color: white;
+    cursor: pointer;
+}
+footer button {
+    background-color: #44BBA4;
     cursor: pointer;
 }
 #enviar:hover {
