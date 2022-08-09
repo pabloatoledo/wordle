@@ -410,7 +410,7 @@ window.onload = function() {
         opModPartGan()
     }
 
-    function cargaTablaGan (partidasGanadas) {
+    function cargaTablaGan (partidasGanadas) {  //recorre la tabla de las partidas ganadas y carga los datos
         for (var x = 0; x < partidasGanadas.length; x++) {
             var trNew = document.createElement("tr")
             var td1 = document.createElement("td")
