@@ -19,7 +19,8 @@
 .gano {
     background-color: green;
 }
-.partGuar {
+.partGuar,
+.partGan {
     background-color: #6969B3;
 }
 .modal-content p {

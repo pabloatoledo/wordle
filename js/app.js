@@ -17,9 +17,13 @@ window.onload = function() {
     var btnContacto = document.getElementById("btnContactanos")     //abre formulario de contacto
     var btnCodigo = document.getElementById("btnCodigo")            //abre el codigo en github
     var btnReiniciar = document.getElementById("btnReiniciar")      //boton reiniciar
+    var btnOrdFecha = document.getElementById("fecGan")             //ordena por fecha en los ganados
+    var btnOrdPunt = document.getElementById("puntGan")             //ordena por puntaje en los ganados
     var alertaRenInc = document.getElementById("rengInco")          //mensaje de error con renglon incompleto
     var palEsco = document.getElementById("palEsco")                //para agregar la palabra que no pudo encontrar
-    var partidasGuardadas = [""]                //levanta las partidas que se encuentren en localstorage
+    var tblPartGan = document.getElementById("tblPartGan")
+    var partidasGuardadas = []                //levanta las partidas que se encuentren en localstorage
+    var partidasGanadas = []
     var palabra = "RAJAR"                       //palabra a encontrar en el tablero (queda esta en caso de no poder leer el json)
     var nombreJugador = ""                      //nombre del jugador
     var filaActual = 0                          //determina la fila actual (principalmente en el focus)
@@ -27,6 +31,8 @@ window.onload = function() {
     var palCorrecta = false                     //determina si la palabra en el renglon es la correcta
     var jugar = false                           //determina si el juego finalizo o no
     var importaDatos = false                    //determina si carga datos desde una partida guardada (se usa para validaciones)
+    var cargoPartGuar = false                   //determina si ya se cargaron o no las partidas guardadas
+    var cargoPartGan = false                    //determina si ya se cargaron o no las partidas ganadas
     var seg = 0                                 //variables de cronometro
     var min = 0
     var hs = 0
@@ -56,9 +62,12 @@ window.onload = function() {
     document.addEventListener("keydown",focus)
     partGuard.addEventListener("click",cargaPartida)
     guardPart.addEventListener("click",guardaPartida)
+    partGanadas.addEventListener("click",cargaPartGanadas)
     btnCodigo.addEventListener("click",abreCodigo)
     btnContacto.addEventListener("click",abreContacto)
     btnReiniciar.addEventListener("click",recargaPagina)
+    btnOrdFecha.addEventListener("click",ordXFecha)
+    btnOrdPunt.addEventListener("click",ordXPunt)
     for (var i = 0; i < numBtns; i++) {
         btnLetra[i].addEventListener('click', focus);  
     }
@@ -254,14 +263,14 @@ window.onload = function() {
         var partidaGanada = []                   //almacena esta partida
         var partidasGanadas = []                 //almacena todas las partidas
         var fechaAct = new Date().toLocaleDateString()
-        var puntaje = 1000 - ((filaActual * 100) + 100) - (hs * 100) - (min * 10) - (seg * 1)
-        partidaGanada = [{
+        var puntaje = 1000 - (filaActual * 100) - (hs * 100) - (min * 10) - (seg * 1)
+        partidaGanada = {
             nombre: nombreJugador,
             fecha: fechaAct,
             tiem: tiempo,
             filas: filaActual + 1,
             punt: puntaje,
-        }]
+        }
         if (localStorage.getItem("PartidasGanadas") != null) {
             partidasGanadas = JSON.parse(localStorage.getItem("PartidasGanadas"))
         }
@@ -329,35 +338,38 @@ window.onload = function() {
     }
 
     function cargaPartida () {                  //muestra las partidas guardadas en el modal
-        opModPartGuard()
-        if (partidasGuardadas.length > 0) {
-            partidasGuardadas.forEach(dato => {
-                var trNew = document.createElement("tr")
-                var btnNuevo = document.createElement("button")
-                var td1 = document.createElement("td")
-                var td2 = document.createElement("td")
-                var td3 = document.createElement("td")
-                var td4 = document.createElement("td")
-                var td5 = document.createElement("td")
-                btnNuevo.type = "button"
-                btnNuevo.innerText = "Seleccionar"
-                btnNuevo.className = "btnPartida"
-                btnNuevo.value = dato[0]
-                td1.innerText = dato[0]
-                td2.innerText = dato[2]
-                td3.innerText = dato[3]
-                td4.innerText = dato[1]
-                td5.innerText = dato[6] + ":" + dato[7] + ":" + dato[8]
-                trNew.appendChild(td1)
-                trNew.appendChild(td2)
-                trNew.appendChild(td3)
-                trNew.appendChild(td4)
-                trNew.appendChild(td5)
-                trNew.appendChild(btnNuevo)
-                document.getElementById("tblPartGuardadas").appendChild(trNew)
-                btnNuevo.addEventListener("click",cargaPartidaTablero)
-            })
+        if(!cargoPartGuar) {
+            if (partidasGuardadas.length > 0) {
+                partidasGuardadas.forEach(dato => {
+                    var trNew = document.createElement("tr")
+                    var btnNuevo = document.createElement("button")
+                    var td1 = document.createElement("td")
+                    var td2 = document.createElement("td")
+                    var td3 = document.createElement("td")
+                    var td4 = document.createElement("td")
+                    var td5 = document.createElement("td")
+                    btnNuevo.type = "button"
+                    btnNuevo.innerText = "Seleccionar"
+                    btnNuevo.className = "btnPartida"
+                    btnNuevo.value = dato[0]
+                    td1.innerText = dato[0]
+                    td2.innerText = dato[2]
+                    td3.innerText = dato[3]
+                    td4.innerText = dato[1]
+                    td5.innerText = dato[6] + ":" + dato[7] + ":" + dato[8]
+                    trNew.appendChild(td1)
+                    trNew.appendChild(td2)
+                    trNew.appendChild(td3)
+                    trNew.appendChild(td4)
+                    trNew.appendChild(td5)
+                    trNew.appendChild(btnNuevo)
+                    document.getElementById("tblPartGuardadas").appendChild(trNew)
+                    btnNuevo.addEventListener("click",cargaPartidaTablero)
+                })
+            }
+            cargoPartGuar = true
         }
+        opModPartGuard()
     }
 
     function cargaPartidaTablero () {           //carga los datos en el tablero y la matriz de letras
@@ -387,6 +399,40 @@ window.onload = function() {
         importaDatos = false
     }
 
+    function cargaPartGanadas () {              //muestra las partidas ganadas en el modal
+        if(!cargoPartGan) {
+            partidasGanadas = JSON.parse(localStorage.getItem("PartidasGanadas"))
+            if (partidasGanadas.length > 0) {
+                cargaTablaGan(partidasGanadas)
+            }
+            cargoPartGan = true
+        }
+        opModPartGan()
+    }
+
+    function cargaTablaGan (partidasGanadas) {
+        for (var x = 0; x < partidasGanadas.length; x++) {
+            var trNew = document.createElement("tr")
+            var td1 = document.createElement("td")
+            var td2 = document.createElement("td")
+            var td3 = document.createElement("td")
+            var td4 = document.createElement("td")
+            var td5 = document.createElement("td")
+            td1.innerText = partidasGanadas[x].nombre
+            td2.innerText = partidasGanadas[x].fecha
+            td3.innerText = partidasGanadas[x].tiem
+            td4.innerText = partidasGanadas[x].filas
+            td5.innerText = partidasGanadas[x].punt
+            trNew.id = "tr" + x
+            trNew.appendChild(td1)
+            trNew.appendChild(td2)
+            trNew.appendChild(td3)
+            trNew.appendChild(td4)
+            trNew.appendChild(td5)
+            tblPartGan.appendChild(trNew)
+        }
+    }
+
     function abreCodigo () {                    //abre la pagina de github con el codigo
         window.open("https://github.com/pabloatoledo/wordle", "_blank")
     }
@@ -399,6 +445,36 @@ window.onload = function() {
         location.reload()
     }
 
+    function ordXFecha () {                     //ordena por fecha en las partidas ganadas
+        var newPartGan = partidasGanadas
+        newPartGan.sort(function(a, b) {
+            var c = new Date(a.fecha);
+            var d = new Date(b.fecha);
+            return c-d;
+        });
+        if (cargoPartGan) {
+            for(var x = 0; x < partidasGanadas.length; x++) {
+                var idtr = "tr" + x
+                var tr = document.getElementById(idtr)
+                tblPartGan.removeChild(tr)
+            }
+            cargaTablaGan(newPartGan)
+        }
+    }
+
+    function ordXPunt () {                      //ordena por puntaje en las partidas ganadas
+        var newPartGan = partidasGanadas
+        newPartGan.sort(function(a, b){return a.punt - b.punt})
+        if (cargoPartGan) {
+            for(var x = 0; x < partidasGanadas.length; x++) {
+                var idtr = "tr" + x
+                var tr = document.getElementById(idtr)
+                tblPartGan.removeChild(tr)
+            }
+            cargaTablaGan(newPartGan)
+        }
+    }
+
     // ---------- modales ---------- //
 
     //DOM
@@ -406,6 +482,8 @@ window.onload = function() {
     var modalPerdio = document.getElementById("modalPerdio")
     var modalNombre = document.getElementById("modalFaltaNombre")
     var modalPartGuard = document.getElementById("modalPartGuard")
+    var modalPartGan = document.getElementById("modalPartGan")
+    var closePartGan = document.getElementsByClassName("closePartGan")[0]
     var closePartGuard = document.getElementsByClassName("closePartGuard")[0]
     var closeNombre = document.getElementsByClassName("closeNombre")[0]
     var closeGano = document.getElementsByClassName("closeGano")[0]
@@ -428,6 +506,10 @@ window.onload = function() {
         modalPartGuard.classList.remove("block")
         modalPartGuard.classList.add("oculto")
     }
+    closePartGan.onclick = function() {
+        modalPartGan.classList.remove("block")
+        modalPartGan.classList.add("oculto")
+    }
     window.onclick = function(event) {
         if (event.target == modalGano) {
             modalGano.classList.remove("block")
@@ -444,6 +526,10 @@ window.onload = function() {
         if (event.target == modalPartGuard) {
             modalPartGuard.classList.remove("block")
             modalPartGuard.classList.add("oculto")
+        }
+        if (event.target == modalPartGan) {
+            modalPartGan.classList.remove("block")
+            modalPartGan.classList.add("oculto")
         }
     }
 
@@ -463,5 +549,9 @@ window.onload = function() {
     function opModPartGuard () {
         modalPartGuard.classList.remove("oculto")
         modalPartGuard.classList.add("block")
+    }
+    function opModPartGan () {
+        modalPartGan.classList.remove("oculto")
+        modalPartGan.classList.add("block")
     }
 }

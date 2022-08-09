@@ -139,6 +139,9 @@ footer button {
     font-size: 25px;
     border-radius: 10px;
 }
+.ordena {
+    cursor: pointer;
+}
 .bg-yellow {
     background-color: #FAFD0F;
 }
